@@ -1,0 +1,14 @@
+#score-check
+turn_counter = 2
+score = 11
+
+if score = 21:
+    print('Blackjack!')
+    #game over
+elif score > 21:
+    print('Busted!')
+    #game over
+elif score < 21:
+    print('Stand or draw?')
+    #game over
+

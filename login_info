@@ -1,0 +1,16 @@
+#this is a test of the login system (Test complete)
+
+user_info = {'hide on bush':'iamfaker', 'makeyourusername2':'randompassword', 'randompassword':'youllneverguessthis} #an "expanded" list with password info for each user
+uid_login = ''
+
+while uid_login not in user_info:
+    uid_login = input('Please input your username: ')
+    uid_password = input('Please input your password: ')
+    if uid_login not in user_info:
+        print('Username does not match our records, please try again!')
+    else:
+        while uid_password != user_info.get(uid_login):
+            print('Password does not match our records, please try again!')
+            uid_password = input('Please input your password: ')
+uid_active = uid_login
+print('Login successful! Welcome ' + uid_active )

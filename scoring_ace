@@ -1,0 +1,6 @@
+#calculating the ace score with ace_count, points_added and points_ace (basically program trying to vary aces to stay below 21)
+if norm_score + 10 + ace_count > 21:  #it is a hard ace (total + 11 - 1*(#ofaces-1)>21: First ace = 1
+    ace_score = ace_count
+else:  #it is a soft ace: First ace = 11,
+    ace_score = 10 + ace_count #11 (for first ace) + ace count - 1
+

@@ -1,0 +1,26 @@
+#scoring system
+# 10-K are valued 10
+# A is valued 1 OR 11
+# soft hand - Ace can be 1 or 11 without busting
+# hard hand - Ace can be counted as a 1 only
+score_total = 10
+norm_score = 10
+ace_count = 0
+ace_score = 0
+alpha_rank = 'JQK'
+ace_rank = 'A'
+point = 0
+
+
+draw = 'A\u2660'
+print('score = ' + str(score))
+print('You have drawn:' + draw)
+
+
+#determining the rank of the card drawn - if the card is an ace then the count goes to a separate counter
+if draw[0] in alpha_rank or draw[1] =='0': #checking if this is a alphanumeric suit (not ace) or if it is a 2 digit # (10)
+    score_added = 10
+elif draw[0] in ace_rank: #checking if this is an ace
+    ace_count = ace_count + 1
+else:   #it is a number, and if the 1st char is NOT '0' then the # is whatever the 0th char is
+    score_added = int(draw[0])

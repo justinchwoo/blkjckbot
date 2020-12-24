@@ -1,4 +1,4 @@
-#Welcome to my blog recording the learning process of making a discord bot/independent Bprogram for blackjack! This is a hobby/learning project, my second python project ever and second coding project in any recent memory, designed for me to learn the thought processes and basics of coding through pushing the boundaries of my knowledge and constant problem solving (i.e. ramming my head against the wall then googling how to break it) ^^' I'm new to blogging and coding so forgive me if I miss some conventions, make mistakes and generally bumble around in code or in blogging haha
+#Welcome to my blog recording the learning process of making a discord bot/independent program for blackjack! This is a hobby/learning project, my second python project ever and second coding project in any recent memory, designed for me to learn the thought processes and basics of coding through pushing the boundaries of my knowledge and constant problem solving (i.e. ramming my head against the wall then googling how to break it) ^^' I'm new to blogging and coding so forgive me if I miss some conventions, make mistakes and generally bumble around in code or in blogging haha
 
 #Blog contents
 ### Introductory Post 24/12/2020
@@ -26,3 +26,12 @@ Thank you for stopping by! I hope you enjoy reading through my trials and tribul
 ### 24/12/2020 - Abbreviated update
 Current Work: 
 Split scoring test into 3 sections vs the original 5, removed ace calculations to a different section, as aces need to be calculated differently. Checked scoring otherwise and it works as intended so far. 
+
+Notes: 
+To keep track of scores I think we need 3 different counters to keep track of the game for each player:
+- player_score Keeping track of the total score of the player 
+- player_ace_countKeeping track of how many aces we have in the hand
+- player_score_added Keeping track of the scores added the current round (minus aces)
+- player_ace_added Keeping tack of the scores added by the aces in the current round (maybe there is a way to make this obselete)
+
+

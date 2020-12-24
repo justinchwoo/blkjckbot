@@ -1,0 +1,20 @@
+#This is a test of the blackjack randomiser
+#unicode for spade club heart diamond = \u2660 -> 2663
+#create deck first - it will be a list - use curly braces to create a set -> can get stored in any order
+#random.shuffle() - shuffles the order
+deck = []
+import random
+suits = ['\u2660', '\u2661', '\u2662', '\u2663']
+ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
+for suit in suits:
+    for rank in ranks:
+        deck.append(rank+suit)
+random.shuffle(deck)
+for cards in deck:
+    print(cards)
+
+#to draw a card (from the top)
+current_draw = deck.pop()
+print(current_draw)
+current_draw = deck.pop()
+print(current_draw)

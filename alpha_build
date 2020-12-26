@@ -1,0 +1,79 @@
+import random
+
+#Variables
+user_info = {'12345':'12345', '791':'tomatosoup1', 'hide on bush':'iamfaker'} #an "expanded" list with password info for each user
+
+#login program - not integrated yet
+def log_in():
+    uid_login = ''
+    while uid_login not in user_info:
+        uid_login = input('Please input your username: ')
+        uid_password = input('Please input your password: ')
+        if uid_login not in user_info:
+            print('Username does not match our records, please try again!')
+        else:
+            while uid_password != user_info.get(uid_login):
+                print('Password does not match our records, please try again!')
+                uid_password = input('Please input your password: ')
+    uid_active = uid_login
+    print('Login successful! Welcome ' + uid_active)
+
+#shuffler program
+def shuffler():
+    # generating program variables
+    deck = []
+    # starting shuffle
+    suits = ['\u2660', '\u2661', '\u2662', '\u2663']
+    ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
+    for suit in suits:
+        for rank in ranks:
+            deck.append(rank+suit)
+    random.shuffle(deck)
+    return deck
+
+#add_to_hand program
+def add_to_hand(active_hand, current_draw):
+    active_hand.append(current_draw)
+    return active_hand
+
+#score calculator
+def score_calc(active_hand):
+    #generating program variables
+    alpha_rank = 'JQK'
+    ace_rank = 'A'
+    active_score = 0
+    hand_card = ''
+    ace_count = 0
+
+    #deciphering the card
+    for hand_card in active_hand:
+        if hand_card[0] in alpha_rank or hand_card[1] =='0': #checking if the card score is JQK (10)
+            active_score = active_score + 10
+        elif hand_card[0] in ace_rank: #checking if the card is an ace (1/11)
+            ace_count = ace_count + 1
+        else:   #confirming card is a number (1-9)
+            active_score =  active_score + int(hand_card[0])
+
+    #calculating for aces
+    if ace_count > 0:
+        if active_score + 10 + ace_count > 21: #checking if the situation is a hard ace
+            active_score = active_score + ace_count
+        else:
+            active_score = active_score + 10 + ace_count #checking if the situation is a soft ace
+    return active_score
+
+#program starts
+print('Starting game!')
+active_deck = shuffler()
+bust_check = False
+player_1_hand = []
+
+#while bust_check == False:
+current_draw = active_deck.pop()
+print('You have drawn a ' + current_draw)
+player_1_hand = add_to_hand(player_1_hand, current_draw)
+print('Your current hand: ')
+for cards in range(len(player_1_hand)):
+    print(player_1_hand[cards])
+player_1_score = score_calc(player_1_hand)
+print('Your score is ' + str(player_1_score))

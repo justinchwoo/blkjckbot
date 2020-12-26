@@ -29,9 +29,22 @@ Split scoring test into 3 sections vs the original 5, removed ace calculations t
 
 Notes: 
 To keep track of scores I think we need 3 different counters to keep track of the game for each player:
-- player_score Keeping track of the total score of the player 
-- player_ace_countKeeping track of how many aces we have in the hand
-- player_score_added Keeping track of the scores added the current round (minus aces)
-- player_ace_added Keeping tack of the scores added by the aces in the current round (maybe there is a way to make this obselete)
+- player_score - Keeping track of the total score of the player 
+- player_ace_count - Keeping track of how many aces we have in the hand
+- player_score_added - Keeping track of the scores added the current round (minus aces)
+- player_ace_added - Keeping tack of the scores added by the aces in the current round (maybe there is a way to make this obselete)
+
+### 26/12/2020 - Abbreviated update
+Current Work: 
+Changing the concept of the program, tackling the probabilities and saving the score seems hard to conceptualise and seems very confusing. How does a human approach figuring out a score in the game of blackjack? Not via looking at the score at a whole but looking at the CARDS. Will add a new list for each possible player via the list 'Hand', giving each player an actual hand they can view and that the program can run a score calculation on. Created my first flowchart to help me make sense of what decisions I might need to make, saved in the repository via diagrams.net.. I hope it works hahaha
+
+For now I've compiled my creations so far to create a program (with defined chunks of code) that shuffles the deck, draws a card and returns the hand and the score, and put it as blkjckbot_alpha. Will keep building out the process just to get a good picture of how it works then further section off more code into functions to minimise complications. 
+
+Notes:
+Variables changed: 
+- player_hand - New variable: 1 variable only for all players
+- active_deck - New variable to represent the active deck being played right now
+- current_draw - The current card being drawn from the deck
+I will need a variable that tracks the status of the game and maybe one that decides whether or not the player draws or stands
 
 

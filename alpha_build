@@ -31,11 +31,6 @@ def shuffler():
     random.shuffle(deck)
     return deck
 
-#add_to_hand program
-def add_to_hand(active_hand, current_draw):
-    active_hand.append(current_draw)
-    return active_hand
-
 #score calculator
 def score_calc(active_hand):
     #generating program variables
@@ -64,16 +59,104 @@ def score_calc(active_hand):
 
 #program starts
 print('Starting game!')
-active_deck = shuffler()
 bust_check = False
-player_1_hand = []
+player_hand = []
+dealer_hand = []
+player_status = 'D' #sets player status to "draw", triggering while loop
+decision_check = 'a' #sets player's decision check as value outside range, forcing player to input one of the selected elements
 
-#while bust_check == False:
-current_draw = active_deck.pop()
-print('You have drawn a ' + current_draw)
-player_1_hand = add_to_hand(player_1_hand, current_draw)
-print('Your current hand: ')
-for cards in range(len(player_1_hand)):
-    print(player_1_hand[cards])
-player_1_score = score_calc(player_1_hand)
-print('Your score is ' + str(player_1_score))
+active_deck = shuffler() #shuffling cards
+
+#setting dealer's hand
+dealer_hand.append(active_deck.pop())
+dealer_hand.append(active_deck.pop())
+dealer_score = score_calc(dealer_hand)
+print('The dealer\'s current hand is: ')
+print('XX, ' + dealer_hand[1])
+
+#player phase
+#draws 2 cards for player
+player_hand.append(active_deck.pop())
+player_hand.append(active_deck.pop())
+print('Your current hand is: ')
+print(', '.join(player_hand))
+player_score = score_calc(player_hand)
+if player_score == 21 and len(player_hand) == 2:
+    player_status = 'B'
+    print('Player has Blackjack!')
+
+#add split(split 1 deck into 2), double down (up to double bet), surrender(returns half)
+#add insurance (dealer ace) - adds half initial wager in insurance, dealer checks for blackjack, if dealer has blackjack, player loses but gets 2:1 odds on insurance bet
+
+while player_status == 'D':
+    if player_score > 21:
+        player_status = 'L'
+        print('Player busted!')
+    elif player_score <= 21:
+        decision_check = 'a'
+        while decision_check not in 'SsHh':
+            decision_check = input('What do you want to do? (S)tay or (H)it: ')
+        if decision_check in 'Ss':
+            player_status = 'S'
+            print('You have chosen to stay')
+        elif decision_check in 'Hh':
+            player_status = 'D'  # D causes another draw
+            current_draw = active_deck.pop() #draws card
+            print('You have drawn a ' + current_draw)
+            player_hand.append(current_draw) #adds card to hand
+            print('The dealer\'s current hand is: ')
+            print('XX, ' + dealer_hand[1])
+            print('Your current hand is: ')
+            print(', '.join(player_hand)) #shows the hand to the player
+            player_score = score_calc(player_hand) #calculates the score
+
+if player_status == 'S':
+    #showing player score
+    print('Your current score is: ' + str(player_score))
+
+    #dealer phase
+    print('The dealer\'s current hand is: ')
+    print(', '.join(dealer_hand))
+    while dealer_score < 17 and player_status != 'W':
+        print('The dealer is drawing a card')
+        dealer_hand.append(active_deck.pop())
+        print('The dealer\'s current hand is: ')
+        print(', '.join(dealer_hand))
+        dealer_score = score_calc(dealer_hand)
+        if dealer_score > 21:
+            print('Dealer has gone bust!')
+            player_status = 'W'
+    if player_status != 'W':
+        print('The dealer has finished drawing') #learn how to break out of loops to nullify this if-statement
+
+    #printing scores
+    if player_status != 'W':
+        print('The dealer\'s current hand is: ')
+        print(', '.join(dealer_hand))
+        print('The dealer\'s score is: ' + str(dealer_score))
+        print('Your current hand is: ')
+        print(', '.join(player_hand))
+        print('The player\'s score is: ' + str(player_score))
+
+        #performing the last calculation
+        if player_score < dealer_score:
+            print('Dealer has higher score.')
+            player_status = 'L'
+        elif player_score > dealer_score:
+            print('Player has higher score.')
+            player_status = 'W'
+        else:
+            print('Both have equal scores.')
+            player_status = 'P'
+
+if player_status in 'BW':
+    print('Player wins!')
+elif player_status == 'L':
+    print('Player loses! Game over!')
+elif player_status == 'P':
+    print('Pushed hand! Bet returned!')
+else:
+    print('Error! Game unable to ascertain status, please restart.')
+
+#odds 3:2 or 6:5
+#10bet 15(3:2)

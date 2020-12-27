@@ -47,4 +47,19 @@ Variables changed:
 - current_draw - The current card being drawn from the deck
 I will need a variable that tracks the status of the game and maybe one that decides whether or not the player draws or stands
 
+### 27/12/2020 - Abbreviated update
+Current work:
+Game process basically complete! Program draws cards, assigns card to dealer hand, then draws twice for player, then proceeds to complete the game, including 2 options for the player to stay or hit, and making the dealer draw until 17. Now moving to implement the different available strategies available to the player: split, double, surrender, insurance. Will start with split, the first step would be making the processes behind draw/busting each hand modular, to make it easier to expand towards 2 decks. The inputs to the function should include, but not be limited to:
+- player_hand - should now be split into hand 1 and hand 2, and a card added to each
+- dealer_hand - for display to the player
+- deck - to draw cards from
 
+the function should return
+- player_hand - to provide something for the dealer to play against
+- player_status - to provide something to show if the player went bust
+
+we should need a 3rd variable as well, as status can't envelop all the decision making markers PLUS whether or not the player wins or loses
+- player_strategy - to provide a variable to keep track of the players' decisions
+
+Notes:
+Alpha version updated

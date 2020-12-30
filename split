@@ -1,0 +1,53 @@
+#this is the scratch file to create a split identification feature
+
+#this part is code designed to help make the feature work
+import random
+
+def shuffler():
+    # generating program variables
+    deck = []
+    # starting shuffle
+    suits = ['\u2660', '\u2661', '\u2662', '\u2663']
+    ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
+    for suit in suits:
+        for rank in ranks:
+            deck.append(rank+suit)
+    random.shuffle(deck)
+    return deck
+
+active_deck = shuffler()
+
+#creating the active hand for testing
+player_hands = [['A$', 'A.']]
+active_hand = ['A$', 'A.']
+
+#printing the active hand for clarity
+print(active_hand[0][0])
+print(active_hand[1][0])
+
+#The 2 if conditions: 
+#if the first digit matches
+#if the second digit is either both 0 or neither 0
+
+#the actual function
+if active_hand[0][0] == active_hand[1][0]: #do the first digits match?
+    print('First digits match')
+    if active_hand[0][1] == active_hand[1][1] == '0' or (active_hand[0][1] and active_hand[1][1] not in '0'):
+        print('Split condition')
+    else:
+        print('Not a split')
+else:
+    print('Not a split')
+
+#running the split
+#splitting the cards
+
+player_hands[0] = [active_hand[0]]
+print(player_hands)
+player_hands.append([active_hand[1]])
+print(player_hands)
+player_hands[0].append(active_deck.pop())
+player_hands[1].append(active_deck.pop())
+
+print(player_hands[0])
+print(player_hands[1])

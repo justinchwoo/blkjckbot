@@ -63,3 +63,12 @@ we should need a 3rd variable as well, as status can't envelop all the decision 
 
 Notes:
 Alpha version updated
+
+### 29/12/2020 - Abbreviated update
+Current work:
+Tried to work the split strategy into the code, struggled a bit with assigning different hands and identifying the conditions of a split. The tough part was with the double digit ranks and trying to figure out the minimum amount of steps to identify a match. identifying the first and 2nd digit of each string would take at least 4 if statements if identified separately, so through lots and lots of deliberation and through drawing a new diagram (identify split.drawio) I figured out how to identify a split with 1 nested if and only having to perform a split operation in one part of the code, hopefully making developing more splits and processes on top more simple! ^^ I will post the results on /split. One more issue I had was with adding to single item string lists. I struggled to get the string list to show up as a list and after some extensive googling I figured I'll just pop some [] on the variable var(y) = [x] and give it a shot and it worked! Trial and error I guess! ^^' So that's solved as well and I have a function that identifies a split situation and a function that can split one hand into two. Next step is to modularize it so I can run up to 4 splits (or up to 6 with multiple decks of cards) without adding too many lines of code. 
+
+Notes:
+Added identify split.drawio
+Added split to the list of programs
+Added player_hands - a list to keep track of all the hands the player has

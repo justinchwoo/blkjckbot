@@ -1,8 +1,5 @@
 #this is the scratch file to create a split identification feature
-
-#this part is code designed to help make the feature work
 import random
-
 def shuffler():
     # generating program variables
     deck = []
@@ -17,37 +14,82 @@ def shuffler():
 
 active_deck = shuffler()
 
-#creating the active hand for testing
-player_hands = [['A$', 'A.']]
-active_hand = ['A$', 'A.']
+#score calculator
+def score_calc(active_hand):
+    #generating program variables
+    alpha_rank = 'JQK'
+    ace_rank = 'A'
+    active_score = 0
+    hand_card = ''
+    ace_count = 0
 
-#printing the active hand for clarity
-print(active_hand[0][0])
-print(active_hand[1][0])
+player_credits = 1000
 
-#The 2 if conditions: 
-#if the first digit matches
-#if the second digit is either both 0 or neither 0
+active_bet = int()
+player_bets = []
 
-#the actual function
-if active_hand[0][0] == active_hand[1][0]: #do the first digits match?
-    print('First digits match')
-    if active_hand[0][1] == active_hand[1][1] == '0' or (active_hand[0][1] and active_hand[1][1] not in '0'):
-        print('Split condition')
-    else:
-        print('Not a split')
-else:
-    print('Not a split')
+while int(active_bet) < 10:
+    try:
+        active_bet = int(input('What would your bet be? (minimum 10 credits): '))
+        if active_bet < 10:
+            print('You have to input a minimum of 10 credits!')
+        elif player_credits < 10:
+            active_bet = 0
+            print('You do not have enough credits!')
+        else:
+            player_credits = player_credits - active_bet
+            player_bets.append(active_bet)
+    except ValueError:
+        print('Please input a number!')
+print('Your initial bet: ' + str(player_bets[0]))
+print('You now have ' + str(player_credits) + ' credits')
 
-#running the split
-#splitting the cards
+#setting dealer's hand
+dealer_hand = []
+dealer_hand.append(active_deck.pop())
+dealer_hand.append(active_deck.pop())
+dealer_score = score_calc(dealer_hand)
+print('Hands:')
+print('Dealer: XX, ' + dealer_hand[1])
 
-player_hands[0] = [active_hand[0]]
-print(player_hands)
-player_hands.append([active_hand[1]])
-print(player_hands)
+#first draw
+player_hands = [[]]
+active_hand = []
+
+player_hands[0] = [active_deck.pop()]
 player_hands[0].append(active_deck.pop())
-player_hands[1].append(active_deck.pop())
+active_hand = player_hands[0]
+print('Player: ' + str(active_hand))
 
-print(player_hands[0])
-print(player_hands[1])
+require_split_check = True  #activates the loop to keep running split checks until no splits are left
+split_decision = 'a' #forces player to input a valid element
+
+#this split check keeps running down the split list (with print indicators) until no splits are found
+while require_split_check == True:
+    print('Checking for split')
+    require_split_check = False
+    for active_hand in player_hands:
+        hand_number = player_hands.index(active_hand)
+        print(active_hand)
+        print('hand number ' + str(hand_number))
+        if active_hand[0][0] == active_hand[1][0]:  # do the first digits match?
+            print('First digits match')
+            if active_hand[0][1] == active_hand[1][1] == '0' or (active_hand[0][1] and active_hand[1][1] not in '0'):
+                while split_decision not in 'YyNn':
+                    split_decision = input('Does the player want to split? (Y)es or (N)o?: ')
+                if split_decision in 'Yy':
+                    require_split_check = True
+                    player_hands[hand_number] = [active_hand[0]]
+                    print(player_hands)
+                    player_hands.append([active_hand[1]])
+                    print(player_hands)
+                    player_hands[hand_number].append(active_deck.pop())
+                    player_hands[len(player_hands) - 1].append(active_deck.pop())
+                    print(player_hands)
+            else:
+                print('Not a split')
+        else:
+            print('Not a split')
+game_size = len(player_hands)
+
+for active_hand in player_hands: #not expandable to 2nd deck

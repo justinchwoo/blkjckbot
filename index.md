@@ -72,3 +72,12 @@ Notes:
 Added identify split.drawio
 Added split to the list of programs
 Added player_hands - a list to keep track of all the hands the player has
+
+### 30/12/2020 - Abbreviated update
+Current work:
+Modularised the split, found a solution that utilises an index and finding the length of the "player_hands" list to make the code be able to identify a split wherever it is in the deck, with the player able to choose to split or not. Worked out that the double-down and the insurance bet should be placed after the split, or maybe I will implement an option where the player gets to choose their action before the split is calculated. I think the former would be simpler to code and would not change the game at all. This will involve placing new player elements, like a player_bet and a player_balance system. I have chosen to give the player the minimum bet so they don't "run out", but limits their strategy choices enough to hinder players who take bad risks and bank on the per-game income. It will take a little bit of work integrating that into the system indeed, but looking forward to working on that tomorrow and in the new year!
+
+Notes:
+Added to /split
+- new code enabling the split choice to be given to players until the players choose to not split
+

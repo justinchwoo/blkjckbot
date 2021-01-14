@@ -81,3 +81,16 @@ Notes:
 Added to /split
 - new code enabling the split choice to be given to players until the players choose to not split
 
+### 14/01/2021 - Big Update
+I've gotten the basic modules completed and I am trying to put the program together Building the current program gets more complicated with every additional step, and it's becoming more and more apparent that my program has a really rigid sequence and it takes agency out of the hands of the player, making playing it seem like doing a to-do list instead of actually playing it. It also makes changes difficult because every change I make has ramifications later on in the program, making changes complicated. The core issue is with the active_hand and as an extension the player_hands. I need to reconsider the way I approach constructing the data knowing what I know now: that I need to think of it as an object and figure out what attributes I would like to give it. So I'm going to work on redesigning the player_hand as an object from the ground up. Player_hands as a set is relatively straightforward as a global variable, as it contains the different hands and there really isn't much change to that variable as a whole. Now considering each hand within the player_hands set. 
+
+Each hand would contain the following:
+A SET of STRINGs denoting the cards in the hand in question
+
+Each hand would need to be defined by the following:
+Double Down Identifier - BOOLEAN this would help me in limiting draws i.a.w. the double down rule
+Split Status - STR identifier (3 states) that would determine if it is awaiting process (modifying bets and balances), denied (player chose not to split) or processed/awaiting split (base status/ready state)
+Bet Amount - INT representing the amount currently being bet on this hand
+
+Will try to research ways to make this.. object or find a way to conceptually encapsulate this without resorting to spaghetti code or 4 separate sets. 
+

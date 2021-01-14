@@ -1,35 +1,100 @@
+#this is the scratch file to create a split identification feature
 import random
-
-#Variables
-user_info = {'12345':'12345', '791':'tomatosoup1', 'hide on bush':'iamfaker'} #an "expanded" list with password info for each user
-
-#login program - not integrated yet
-def log_in():
-    uid_login = ''
-    while uid_login not in user_info:
-        uid_login = input('Please input your username: ')
-        uid_password = input('Please input your password: ')
-        if uid_login not in user_info:
-            print('Username does not match our records, please try again!')
-        else:
-            while uid_password != user_info.get(uid_login):
-                print('Password does not match our records, please try again!')
-                uid_password = input('Please input your password: ')
-    uid_active = uid_login
-    print('Login successful! Welcome ' + uid_active)
-
-#shuffler program
 def shuffler():
     # generating program variables
     deck = []
-    # starting shuffle
+    # this part constructs the deck to be shuffled, constructing 52 objects by combining suits and ranks to create every card
     suits = ['\u2660', '\u2661', '\u2662', '\u2663']
     ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
     for suit in suits:
         for rank in ranks:
             deck.append(rank+suit)
+    #this part shuffles the newly constructed deck
     random.shuffle(deck)
     return deck
+
+#setting the bet
+def bet_set(player_bal):
+    #defining variables used within the program
+    active_bet = int()
+    while int(active_bet) < 10: #setting loop to make sure the initial bet is over 10 credits
+        try:
+            initial_bet = int(input('What would your bet be? (minimum 10 credits): '))
+            active_bet = initial_bet
+            if active_bet < 10:
+                print('You have to input a minimum of 10 credits!')
+            elif player_bal < 10:
+                active_bet = 0
+                print('You do not have enough credits!')
+            else:
+                return(active_bet)
+        except ValueError:
+            print('Please input a number!')
+
+#splits deck for the player if needed
+def split_check(player_hands, player_bal, initial_bet, player_bets):
+    have_balance = True
+    require_split_check = True
+    no_split = [False, False, False, False]
+    hand_number = int()
+    split_info = []
+    active_hand = []
+
+    while require_split_check == True and have_balance == True:
+        require_split_check = False
+        for active_hand in player_hands:
+            hand_number = player_hands.index(active_hand)
+            if no_split[hand_number]:
+                require_split_check = False
+            elif active_hand[0][0] == active_hand[1][0]:  # do the first digits match?
+                if active_hand[0][1] == active_hand[1][1] == '0' or (active_hand[0][1] and active_hand[1][1] not in '0'):
+                    split_decision = 'N/A'
+                    while split_decision not in 'YyNn':
+                        print('Current Balance: ' + str(player_bal))
+                        print('Current hand: ')
+                        print(player_hands[hand_number])
+                        split_decision = input('Does the player want to split? (Y)es or (N)o?: ')
+                    if split_decision in 'Yy' and initial_bet <= player_bal:
+                        player_bal = player_bal - initial_bet #putting the bet in
+                        player_bets.append(initial_bet)
+                        require_split_check = True #executing the split
+                        player_hands[hand_number] = [active_hand[0]]
+                        player_hands.append([active_hand[1]])
+                        player_hands[hand_number].append(active_deck.pop())
+                        player_hands[len(player_hands) - 1].append(active_deck.pop())
+                    elif split_decision in 'Yy' and initial_bet > player_bal:
+                        print('You do not have enough balance to split!')
+                        print('Continuing to game')
+                        have_balance = False #setting variable to trigger exit of loop
+                        break #breaking out of the for-loop to start the next section of code
+                    elif split_decision in 'Nn':
+                        no_split[hand_number] = True
+                        require_split_check = True #triggers one more iteration of the loop
+                    else:
+                        print('Error: Unexpected Exception')
+                        exit()
+    split_info = [player_hands,player_bal,player_bets]
+    return(split_info)
+
+#this enables the player to put down an insurance bet
+def insurance_check(dealer_hand, player_bal, initial_bet, player_hands):
+    insurance_info = []
+    # checking for insurance
+    insurance_decision = 'N/A'
+    insurance_bet = int()
+    if dealer_hand[1][0] == 'A' and player_bal > initial_bet/2:
+        for active_hand in player_hands:
+            if player_bal > initial_bet/2:
+                while insurance_decision not in 'YyNn':
+                    print('Current Balance: ' + str(player_bal))
+                    print('Current hand: ')
+                    print(player_hands[hand_number])
+                    insurance_decision = input('Would you like to put an insurance bet on this hand? (Y)es or (N)o: ')
+                if insurance_decision in 'Yy':
+                    insurance_bet = insurance_bet + initial_bet/2
+                    player_bal = player_bal - initial_bet/2
+    insurance_info = [insurance_bet, player_bal]
+    return insurance_info
 
 #score calculator
 def score_calc(active_hand):
@@ -57,106 +122,185 @@ def score_calc(active_hand):
             active_score = active_score + 10 + ace_count #checking if the situation is a soft ace
     return active_score
 
-#program starts
-print('Starting game!')
-bust_check = False
-player_hand = []
-dealer_hand = []
-player_status = 'D' #sets player status to "draw", triggering while loop
-decision_check = 'a' #sets player's decision check as value outside range, forcing player to input one of the selected elements
+def double_down(player_hands,player_bal,player_bets, dealer_hand):
+    active_hand = []
+    player_score = int()
+    player_hand_index = 0
+    double_down_hands = []
+    have_balance = True
 
-active_deck = shuffler() #shuffling cards
+    for active_hand in player_hands:
+        player_score = score_calc(active_hand)
+        double_down_decision = 'N/A'
+        if player_score > 9 and have_balance == True:
+            while double_down_decision not in 'YyNn':
+                print('Dealer hand: ' + str(dealer_hand))
+                print('Current hand: ' + str(active_hand))
+                double_down_decision = input('Would the player like to double their bet on this hand? (Y)es or (N)o: ')
+            if double_down_decision in 'Yy' and player_bal >= player_bets[player_hand_index]:
+                print('You selected Yes, doubling bet now.')
+                player_bal = player_bal - player_bets[player_hand_index]
+                double_down_hands.append(player_hand_index)
+            elif double_down_decision in 'Yy' and player_bal < player_bets[player_hand_index]:
+                print('Player does not have the balance required to double down!')
+                print('Continuing to game...')
+                have_balance = False
+        player_hand_index = player_hand_index + 1
+
+    double_down_info = [player_bal, double_down_hands]
+    return double_down_info
+
+player_bal = 20
+
+active_bet = int()
+player_bets = []
+initial_bet = int()
+
+active_deck = shuffler()
+
+#Variables used:
+#external variables
+player_bal = 20 #balance of the (bank)
+#some player identifier??
+
+#player global variables
+player_bets = [] #the bets corresponding to each hand of the player
+player_hands = [[]] #the hands the player has, up to 4 (as of current)
+insurance_bet = int() #the insurance bet (total between all hands)
+initial_bet = int()  #the initial bet that determines the size of all the other bets
+double_down_hands = [] #which hand is doubled down in #0 to #X
+player_hand_status = []
+hand_index = int()
+
+#dealer variables
+dealer_hand = []
+
+#local game variables
+active_bet = int() #the current bet loaded into the program
+active_deck = [] #the current deck the game is running off of (loaded using fn(deck)
+draw_decision = str()
+
+#shuffling deck
+active_deck = shuffler()
+
+#setting bet
+active_bet = bet_set(player_bal)
+player_bal = player_bal - active_bet
+player_bets.append(active_bet)
+print('Your initial bet: ' + str(player_bets[0]))
+print('You now have ' + str(player_bal) + ' credits')
 
 #setting dealer's hand
 dealer_hand.append(active_deck.pop())
 dealer_hand.append(active_deck.pop())
+print('Hands:')
+print('Dealer: XX, ' + dealer_hand[1])
+
+#preparing the player hand
+player_hands[0] = [active_deck.pop()]
+player_hands[0].append(active_deck.pop())
+#player_hands = [['A.','A$'],['10.','10$']]
+active_hand = player_hands[0]
+print('Player: ' + str(active_hand))
+
+#splitting the deck
+split_return = split_check(player_hands, player_bal, initial_bet, player_bets)
+player_hands,player_bal,player_bets = split_return[0], split_return[1], split_return[2]
+
+print(player_bal)
+print(player_bets)
+
+#insurance check
+insurance_return = insurance_check(dealer_hand, player_bal, initial_bet,player_hands)
+insurance_bet, player_bal = insurance_return[0], insurance_return[1]
+
+#double down
+double_down_return = double_down(player_hands,player_bal,player_bets, dealer_hand)
+player_bal, double_down_hands = double_down_return[0], double_down_return[1]
+print(double_down_return)
+for hand in double_down_hands:
+    player_bets[hand] = player_bets[hand]*2
+
+#beginning the game
+print('Beginning game: ')
+hand_index = 0
+
+#running a loop for the game
+#key: Determined by player_hand_status: S = Stay, X = Busted B = Blackjack
+
+for hand in player_hands:
+    #calculating the initial score
+    active_hand = hand
+    player_score = score_calc(active_hand)
+
+    #for a blackjack condition, player hits 21 with their original hand
+    if player_score == 21 and len(player_hand) == 2:
+        player_hand_status[hand_index] = 'B' #B is the indicator for Blackjack
+        print('Player has Blackjack!')
+
+#Draw/Stand decisions
+    draw_decision = True
+    while draw_decision == True:
+        player_score = score_calc(active_hand)
+        draw_decision = False #terminates the loop unless player chooses to draw
+        if player_score > 21:
+            player_hand_status[hand_index] = 'X' #X is the indicator for a bust
+            print('Player busted!')
+        elif player_score <= 21:
+            decision_check = 'a'
+            while decision_check not in 'SsHh':
+                decision_check = input('What do you want to do? (S)tay or (H)it: ')
+            if decision_check in 'Ss':
+                player_hand_status[hand_index] = 'S' #S is the indicator for a stay
+                print('You have chosen to stay')
+                print('Continuing...')
+            elif decision_check in 'Hh':
+                draw_decision = True  # causes another draw
+                current_draw = active_deck.pop()  # draws card
+                print('You have drawn a ' + current_draw)
+                player_hand.append(current_draw)  # adds card to hand
+                print('The dealer\'s current hand is: ')
+                print('XX, ' + dealer_hand[1])
+                print('Your current hand is: ')
+                print(', '.join(player_hand))  # shows the hand to the player
+                player_score = score_calc(player_hand)  # calculates the score
+    hand_index = hand_index + 1
+
+#Dealing with a Blackjack push
 dealer_score = score_calc(dealer_hand)
-print('The dealer\'s current hand is: ')
-print('XX, ' + dealer_hand[1])
+hand_index = 0
+for hand in player_hands:
+    if dealer_score == 21 and player_hand_status[hand_index] == 'B':
+        print('Both hands are Blackjacks! Pushing the bet towards the next game.')
+        player_hand_status[hand_index] = 'P'
+    hand_index = hand_index + 1
 
-#player phase
-#draws 2 cards for player
-player_hand.append(active_deck.pop())
-player_hand.append(active_deck.pop())
-print('Your current hand is: ')
-print(', '.join(player_hand))
-player_score = score_calc(player_hand)
-if player_score == 21 and len(player_hand) == 2:
-    player_status = 'B'
-    print('Player has Blackjack!')
-
-#add split(split 1 deck into 2), double down (up to double bet), surrender(returns half)
-#add insurance (dealer ace) - adds half initial wager in insurance, dealer checks for blackjack, if dealer has blackjack, player loses but gets 2:1 odds on insurance bet
-
-while player_status == 'D':
-    if player_score > 21:
-        player_status = 'L'
-        print('Player busted!')
-    elif player_score <= 21:
-        decision_check = 'a'
-        while decision_check not in 'SsHh':
-            decision_check = input('What do you want to do? (S)tay or (H)it: ')
-        if decision_check in 'Ss':
-            player_status = 'S'
-            print('You have chosen to stay')
-        elif decision_check in 'Hh':
-            player_status = 'D'  # D causes another draw
-            current_draw = active_deck.pop() #draws card
-            print('You have drawn a ' + current_draw)
-            player_hand.append(current_draw) #adds card to hand
-            print('The dealer\'s current hand is: ')
-            print('XX, ' + dealer_hand[1])
-            print('Your current hand is: ')
-            print(', '.join(player_hand)) #shows the hand to the player
-            player_score = score_calc(player_hand) #calculates the score
-
-if player_status == 'S':
-    #showing player score
-    print('Your current score is: ' + str(player_score))
-
-    #dealer phase
+#Determining dealer score
+if not player_hand_status.count('B') == len(player_hand_status):
     print('The dealer\'s current hand is: ')
     print(', '.join(dealer_hand))
-    while dealer_score < 17 and player_status != 'W':
+    while dealer_score < 17:
         print('The dealer is drawing a card')
         dealer_hand.append(active_deck.pop())
         print('The dealer\'s current hand is: ')
         print(', '.join(dealer_hand))
         dealer_score = score_calc(dealer_hand)
-        if dealer_score > 21:
-            print('Dealer has gone bust!')
-            player_status = 'W'
-    if player_status != 'W':
-        print('The dealer has finished drawing') #learn how to break out of loops to nullify this if-statement
+    if dealer_score > 21:
+        print('Dealer has gone bust!')
+        hand_index = 0
+        for hand in player_hands:
+            player_hand_status[hand_index] = 'W'
+            hand_index = hand_index + 1
 
-    #printing scores
-    if player_status != 'W':
-        print('The dealer\'s current hand is: ')
-        print(', '.join(dealer_hand))
-        print('The dealer\'s score is: ' + str(dealer_score))
-        print('Your current hand is: ')
-        print(', '.join(player_hand))
-        print('The player\'s score is: ' + str(player_score))
 
-        #performing the last calculation
-        if player_score < dealer_score:
-            print('Dealer has higher score.')
-            player_status = 'L'
-        elif player_score > dealer_score:
-            print('Player has higher score.')
-            player_status = 'W'
-        else:
-            print('Both have equal scores.')
-            player_status = 'P'
 
-if player_status in 'BW':
-    print('Player wins!')
-elif player_status == 'L':
-    print('Player loses! Game over!')
-elif player_status == 'P':
-    print('Pushed hand! Bet returned!')
-else:
-    print('Error! Game unable to ascertain status, please restart.')
 
-#odds 3:2 or 6:5
-#10bet 15(3:2)
+
+
+# for active_hand in player_hands: #not expandable to 2nd deck
+#     print(active_hand) #confirming the hand
+#     print(player_hands.index(active_hand))
+#     game_bets.append()
+
+
+

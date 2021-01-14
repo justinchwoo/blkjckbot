@@ -92,5 +92,5 @@ Double Down Identifier - BOOLEAN this would help me in limiting draws i.a.w. the
 Split Status - STR identifier (3 states) that would determine if it is awaiting process (modifying bets and balances), denied (player chose not to split) or processed/awaiting split (base status/ready state)
 Bet Amount - INT representing the amount currently being bet on this hand
 
-Will try to research ways to make this.. object or find a way to conceptually encapsulate this without resorting to spaghetti code or 4 separate sets. 
+Will try to research ways to make this.. object or find a way to conceptually encapsulate this without resorting to spaghetti code or 4 separate sets. Current thoughts is that this would be some kind of dictionary with the key and the element that the key represents, will do some research to see if I can make that happen.
 

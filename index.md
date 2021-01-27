@@ -99,4 +99,7 @@ I've run into quite a few issues while converting things into class form. After 
 
 I think looking back on what I've worked so far I learned I should code just beyond my means and not FAR beyond it, and try to understand what I'm trying to do (simulate/create) before writing it out in code. I have a coding course starting today, giving me less time to code my own projects, but I am working on a new project and am going to try to display it better on github. The new project is a RNG event battle royale for discord, with no user controls. Merely a text-based adventure with a few twists in between. I will document it further on /HGbot, see you there! Or in another case, see you back here when I decide to continue! 
 
+Notes:
+Added class_rewrite(UNFINISHED) with the new code featuring the use of classes instead of just variables and functions.
+
 

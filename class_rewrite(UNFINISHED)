@@ -1,0 +1,229 @@
+import random
+
+#global variables
+
+#main()
+initial_bet = 0
+
+#order of operations
+#DD stops a split or insurance
+#Split does not stop a DD or insurance
+    #Splitters should be able to choose which deck they want to split, sorted between what they can and cannot split
+#insurance does not stop a DD but insurance needs to be put on the new deck as well
+
+
+def main():
+    all_hands = []
+    deck = deck_builder()
+    random.shuffle(deck)
+
+    for card in deck:
+        print(card.getface())
+    
+    #Assigning the hand to the dealer
+    dealer_hand = initialize_hand(deck)
+
+    #Assigning the hand to the player
+    player_hand = Playerhand(initialize_hand(deck))
+    initial_bet = initialize_player(player_bal)
+    all_hands.append(player_hand)
+    
+
+    
+def initialize_hand(deck):
+    hand = []
+    hand[0] = deck.pop()
+    hand[1] = deck.pop()
+    return(hand)
+
+def initialize_player(player_bal):
+    while int(bet) < 10: #setting loop to make sure the initial bet is over 10 credits
+        try:
+            bet = int(input('What would your bet be? (minimum 10 credits): '))
+            if bet < 10:
+                print('You have to input a minimum of 10 credits!')
+            elif player_bal < 10:
+                bet = 0
+                print('You do not have enough credits!')
+            else:
+                return(bet)
+        except ValueError:
+            print('Please input a number!')
+
+def hand_menu(all_hands):
+    #showing all the player hands to make a decision with (in order): pregame (making DD/Split/Insurance moves)
+    #try to modularise it so that player sees which hands do not have any decisions left (hands that have stand activated would have 0 moves left)
+    print('Player Hands: ')
+    hand_order = 0
+    hand_selector = 0
+    for hands in all_hands:
+        hand_order = hand_order + 1
+        print('Hand ' + str(hand_order) + ' : ' + player_hand.gethand)
+    
+    #asking the player to select a hand (via the order #)
+    while hand_selector > len(all_hands) or hand_selector == 0 or hand_selector < 0:
+        hand_selector = int(input('Which hand would the player like to play with? (Please input a number): ')) #try to add menu options later on, also moving on to game
+        if hand_selector > len(all_hands) or hand_selector = 0 or hand_selector < 0:
+            print('Please input a valid number!')
+    
+    #recalling the hand
+    active_hand = all_hands[hand_selector]
+    return active_hand
+    
+def action_menu(active_hand):
+    #order of operations
+#DD stops a split or insurance
+#Split does not stop a DD or insurance
+    #Splitters should be able to choose which deck they want to split, sorted between what they can and cannot split
+#insurance does not stop a DD but insurance needs to be put on the new deck as well
+#provide a back option to go to the bigger menu
+    
+#order of operations - we need to be able to select the hand first. 
+    
+    
+    
+
+    
+
+
+#def bal_query(): - we need a way for the user to query their account balance at every decision junction
+    
+
+#def fn()
+def deck_builder():
+    # generating program variables
+    prepared_deck = []
+    # starting shuffle
+    suits = ['\u2660', '\u2661', '\u2662', '\u2663']
+    ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
+    for suit in suits:
+        for rank in ranks:
+            card = Card(suit, rank)
+            prepared_deck.append(card)
+    return prepared_deck
+
+#class
+class Card:
+    def __init__(self, suit, rank):
+        self.face = rank + suit
+        self.rank = rank
+        if rank in 'JQK':
+            self.score = 10
+        elif rank in 'A':
+            self.score = 10
+        else:
+            self.score = int(rank)
+
+    def getscore(self): #returns the score of the card to main
+        return self.score
+
+    def getface(self): #returns the text written on the 'face' of the card to main
+        return self.face
+    
+    def getrank(self):
+        return self.rank
+
+    def hardace(self):
+        self.score = 1
+    
+
+class Playerhand:
+    def __init__(self, init_hand):
+        self.hand = init_hand
+        self.bet = 0
+        self.insurance = 0
+        self.double_down_indicator = 'null' #there are 3 statuses: 'null', 'active', 'standby'
+        self.split_status = 'standby' #there are 3 statuses to split: split complete/please recheck - 'standby' , split initiated 'active', split denied 'off', 
+        self.score = 0
+        self.noace = False
+
+    #Class functions dealing with getting data and adding cards         
+    def gethand(self):
+        return self.hand
+    
+    def addbet(self, bet_amount):
+        self.bet = bet_amount
+
+    def getbet(self):
+        return self.bet
+    
+    def addcard(self, card):
+        self.hand.append(card)
+        self.noace = False
+
+    #Class functions dealing with scoring
+    def getscore(self):
+        for card in self.hand:
+            self.score = self.score + card.getscore()
+        return self.score
+
+    def acecheck(self): #use AFTER calculating score, returns a bool determining if there are aces remaining that can be converted
+        complete_status == False
+        self.noace = False
+        for card in player_hand:
+            if card.getscore() == '11' and card.getrank() == 'A':
+                card.hardace()
+                complete_status = True
+                break
+        if complete_status == False:
+            self.noace = True
+        return self.noace
+    
+    #Class functions dealing with double downs
+    def getdd(self):
+        return self.double_down_indicator
+    
+    def doubledown(self):
+        self.bet = self.bet * 2
+        self.double_down_indicator = 'active'
+        return self.bet
+
+    #Class functions dealing with splits
+    def split(self,player_bal): #Deals with the action of splitting the hand, returns a singular card that was split from the deck
+        split_decision = 'a'
+        if len(self.hand) == 2 and hand[0].getrank() == hand[1].getrank() and player_bal > self.bet():
+            while split_decision not in 'YyNn':
+                split_decision = input('Does the player choose to split this hand?')
+            if split_decision in 'Yy':
+                card_split = hand[1]
+                self.hand = hand[0]
+                self.split_status = 'active'
+            elif split_decision in 'Nn':
+                self.split_status = 'off' 
+        if self.split_status == 'active':
+            return card_split
+
+    def getsplitstatus(self): #Deals with getting the status of the current hand in terms of a split
+        return self.split_status
+    
+    def splitstandby(self): #Deals with updating the status of the split to standby
+        self.split_status = 'standby'
+    
+    #Class functions dealing with insurance
+    def addinsurance(self, init_bet):
+        self.insurance = init_bet
+
+    
+
+
+    
+    
+
+
+
+
+
+
+            
+
+            
+            
+
+
+
+
+
+#execute
+main()
+
+
